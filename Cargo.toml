@@ -1,0 +1,17 @@
+[package]
+name = "bundle"
+version = "0.1.0"
+authors = ["zazbone <coczaz@gmail.com>"]
+edition = "2021"
+
+[lib]
+name = "bundle"
+path = "src/lib.rs"
+
+[[bin]]
+name = "bundle_cli"
+path = "src/main.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
