@@ -4,7 +4,7 @@
 
 ### SYNOPSIS
 
-`bundle` [options] command [arguments]
+`bundle` \[options\] command \[arguments\]
 
 ### DESCRIPTION
 
