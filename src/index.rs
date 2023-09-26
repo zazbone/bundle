@@ -20,16 +20,23 @@ impl BundleIndex {
         }
     }
 
-    pub(crate) fn new_entry<T: Serialize>(&mut self, entry: &T) -> usize {
+    pub(crate) fn new_entry<T: Serialize>(
+        &mut self,
+        entry: &T,
+    ) -> Result<usize, serde_json::Error> {
         let oindex = self.free_entries.iter().next().map(|i| *i);
+        let value = match serde_json::to_value(entry) {
+            Ok(v) => v,
+            Err(e) => return Result::Err(e),
+        };
         if let Some(index) = oindex {
             self.free_entries.remove(&index);
-            self.entries[index] = serde_json::to_value(entry).unwrap();
-            index
+            self.entries[index] = value;
+            Ok(index)
         } else {
-            self.entries.push(serde_json::to_value(entry).unwrap());
+            self.entries.push(value);
             self.num_entry += 1;
-            self.num_entry - 1
+            Ok(self.num_entry - 1)
         }
     }
 
