@@ -17,9 +17,17 @@ struct Cli {
 #[derive(Subcommand)]
 enum Commands {
     Create,
-    Add { meta: String },
-    Get { meta: String },
-    Remove { meta: String },
+    Add {
+        meta: String,
+    },
+    Get {
+        meta: String,
+    },
+    Remove {
+        meta: String,
+        #[clap(long, short)]
+        clear: bool,
+    },
 }
 
 fn main() {
@@ -82,7 +90,7 @@ fn main() {
                 Err(e) => handle_io_error(e),
             };
         }
-        Commands::Remove { meta } => {
+        Commands::Remove { meta, clear } => {
             let mut bundle = match bundle::Bundle::open(args.path) {
                 Ok(v) => v,
                 Err(e) => handle_io_error(e),
@@ -99,6 +107,12 @@ fn main() {
                     std::process::exit(1)
                 }
             };
+            if clear {
+                match std::fs::remove_dir_all(&file_path) {
+                    Ok(_) => {}
+                    Err(e) => handle_io_error(e),
+                };
+            }
             println!("{}", &file_path.display());
             match bundle.save() {
                 Ok(()) => {}
